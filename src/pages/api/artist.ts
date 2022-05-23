@@ -16,11 +16,7 @@ export default async function artist(
     },
   };
 
-  await spotify
-    .get('artists/60d24wfXkVzDSfLS6hyCjZ', config)
-    .then((response) => {
-      const { data } = response;
+  const { data } = await spotify.get('artists', config);
 
-      return res.status(200).json({ data });
-    });
+  return res.status(200).json({ data });
 }
