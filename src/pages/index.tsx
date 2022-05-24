@@ -1,31 +1,40 @@
 import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 import { api } from '../services/api';
 
 export default function Home({}: NextPage) {
-  const [token, setToken] = useState('');
+  const [artistName, setArtistName] = useState('');
+  const [artisInfo, setArtistInfo] = useState({});
 
-  useEffect(() => {
-    getToken();
-  }, []);
-
-  const getToken = () => {
+  async function getArtist() {
     try {
-      api.get('token').then((response) => {
-        console.log(response);
-        setToken(response.data.access_token);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const { data } = await api.get(`artist/${artistName}`);
+      console.log(data);
+      setArtistInfo(data);
+    } catch (error) {}
+  }
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    getArtist();
+  }
 
   return (
     <div>
       <h1>hello world</h1>
 
-      {token && <h2>access_token: {token}</h2>}
+      <form action="">
+        <input
+          type="text"
+          value={artistName}
+          onChange={(event) => setArtistName(event.target.value)}
+        />
+
+        <button type="submit" onClick={handleSubmit}>
+          Enviar
+        </button>
+      </form>
     </div>
   );
 }
